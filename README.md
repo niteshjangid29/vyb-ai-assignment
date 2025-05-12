@@ -2,7 +2,21 @@
 
 This project solves the challenge of estimating the nutrition of home-cooked Indian dishes, even when the input is partial, messy, or ambiguous. It uses open-source LLMs and LangChain to create a robust retrieval-augmented generation (RAG) system capable of understanding real-world cooking variations.
 
+RUN LOCALLY:
+```
+pip3 install streamlit
+```
+
+```
+streamlit run app.py
+```
+
+Live Website: https://vyb-ai-assignment.streamlit.app/
+
 ---
+<img width="1135" alt="Screenshot 2025-05-13 at 1 06 16 AM" src="https://github.com/user-attachments/assets/7654706d-935e-4b09-a5b9-cca1029e5f20" />
+
+
 
 ## Part 1: Core Pipeline
 
