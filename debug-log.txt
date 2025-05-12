@@ -1,0 +1,65 @@
+Debug Log: Handling of Messy Dish Inputs (Part 2)
+--------------------------------------------------
+
+1. Dish: Jeera Aloo (mild fried)
+   Issues: ["ingredient synonym", "quantity missing"]
+
+   Assumptions & Handling:
+   - Mapped "jeera" to "cumin" using context-aware LLM understanding.
+   - Quantity not provided → assumed standard home-cooked values: 2 medium potatoes (~300g), 1 tsp cumin (~2g), 1 tbsp oil (~13g).
+   - Used LLM to infer ingredient relevance despite non-standard naming.
+   - Nutrition computed using retrieved values and scaled to 1 katori (150g).
+   - Dish type inferred as "Dry Sabzi" based on common preparation style.
+
+--------------------------------------------------
+
+2. Dish: Gobhi Sabzi
+   Issues: ["ambiguous dish type"]
+
+   Assumptions & Handling:
+   - "Gobhi" understood by the model as "cauliflower" despite being in Hindi.
+   - Dish type was ambiguous → LLM inferred "Dry Sabzi" based on the word "Sabzi" and typical Indian cuisine.
+   - Used default household quantities: 100g cauliflower, 1 tbsp oil, basic spices.
+   - Model performed fallback handling where needed, producing complete nutrition estimate with dish type included.
+
+--------------------------------------------------
+
+3. Dish: Chana Masala
+   Issues: ["missing ingredient in nutrition DB"]
+
+   Assumptions & Handling:
+   - Ingredient "chana" correctly recognized as "chickpeas".
+   - One minor spice (e.g., amchur) was not found in the Nutrition DB → skipped with logged warning.
+   - LLM gracefully continued by estimating total nutrition from known ingredients.
+   - Dish type identified as "Curry" (Wet Sabzi) based on common usage and masala context.
+
+--------------------------------------------------
+
+4. Dish: Paneer Curry with capsicum
+   Issues: ["unit in 'glass'", "spelling variation"]
+
+   Assumptions & Handling:
+   - "Capsicum" recognized as "bell pepper" (LLM handled spelling variation).
+   - "1 glass" interpreted as 240ml (common cooking heuristic).
+   - LLM assumed paneer: ~100g, bell pepper: ~80g, onion/tomato gravy: ~100g.
+   - Unit ambiguity was resolved by contextual inference, no hardcoded rules.
+   - Dish type determined as "Wet Sabzi".
+
+--------------------------------------------------
+
+5. Dish: Mixed veg
+   Issues: ["no fixed recipe", "ambiguous serving size"]
+
+   Assumptions & Handling:
+   - No fixed recipe → LLM selected common vegetables: potato, carrot, peas, beans (~50g each).
+   - Serving size was ambiguous → estimated total nutrition for full mixed batch and scaled to 1 katori (150g).
+   - Clearly logged fallback ingredients and assumed equal proportions.
+   - Dish type inferred as "Dry Sabzi" based on average Indian preparation.
+
+--------------------------------------------------
+
+Summary:
+- All dishes were processed using natural language prompts to an open-source LLM (Mistral 7B via HuggingFace).
+- Ingredient synonyms, Hindi terms, and unit ambiguity were handled gracefully.
+- Assumptions were made only when needed and logged transparently.
+- Model reasoning was used instead of hardcoded fallback logic for better generalization.
